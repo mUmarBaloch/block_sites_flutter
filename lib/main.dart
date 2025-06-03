@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:android_intent_plus/android_intent.dart';
-import 'package:android_intent_plus/flag.dart';
 
-void main() {
-  runApp(BlockSitesApp());
-}
+void main() => runApp(const MyApp());
 
-class BlockSitesApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Block Sites Flutter',
+      title: 'Block Sites',
+      home: const AccessibilityScreen(),
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.indigo,
-      ),
-      home: AccessibilityScreen(),
     );
   }
 }
@@ -24,61 +18,50 @@ class BlockSitesApp extends StatelessWidget {
 class AccessibilityScreen extends StatelessWidget {
   const AccessibilityScreen({super.key});
 
-  void openAccessibilitySettings() {
-    const intent = AndroidIntent(
-      action: 'android.settings.ACCESSIBILITY_SETTINGS',
-      flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
-    );
-    intent.launch();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo.shade50,
+      backgroundColor: Colors.deepPurple[50],
+      appBar: AppBar(
+        title: const Text('Block Sites'),
+        backgroundColor: Colors.deepPurple,
+      ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.security, size: 80, color: Colors.indigo),
-              const SizedBox(height: 24),
-              Text(
-                'Block Sites Flutter',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.indigo,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'To start blocking distracting websites, please enable Accessibility Service for this app.',
-                style: TextStyle(fontSize: 16, color: Colors.black87),
+              const Icon(Icons.shield, size: 80, color: Colors.deepPurple),
+              const SizedBox(height: 20),
+              const Text(
+                'Enable Accessibility Service',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
-              ElevatedButton.icon(
-                onPressed: openAccessibilitySettings,
-                icon: Icon(Icons.settings_accessibility),
-                label: Text('Open Accessibility Settings'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo,
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                  textStyle: TextStyle(fontSize: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 12),
+              const Text(
+                'To block distracting apps or websites like Instagram, Facebook, and Reddit, please enable Accessibility manually:',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.deepPurple),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'Settings > Accessibility > Block Sites > Enable',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'After enabling, come back here and start browsing normally.\nBlocked sites will be monitored.',
-                style: TextStyle(fontSize: 14, color: Colors.black54),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

@@ -1,16 +1,9 @@
 # block_sites_flutter
 
-A new Flutter project.
+Blocks unwanted sites from browsers using Flutter + Native
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project works only on Android.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Uses Java for Native code.

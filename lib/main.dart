@@ -1,66 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const BlockSitesApp());
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BlockSitesApp extends StatelessWidget {
+  const BlockSitesApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Block Sites',
-      home: const AccessibilityScreen(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class AccessibilityScreen extends StatelessWidget {
-  const AccessibilityScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  static const platform = MethodChannel('com.example.accessibility/channel');
+  bool isAccessibilityEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkAccessibilityStatus();
+  }
+
+  Future<void> checkAccessibilityStatus() async {
+    try {
+      final bool status = await platform.invokeMethod('isAccessibilityEnabled');
+      setState(() {
+        isAccessibilityEnabled = status;
+      });
+    } on PlatformException catch (e) {
+      debugPrint("Error checking accessibility: ${e.message}");
+    }
+  }
+
+  Future<void> openAccessibilitySettings() async {
+    try {
+      await platform.invokeMethod('openAccessibilitySettings');
+    } on PlatformException catch (e) {
+      debugPrint("Error opening settings: ${e.message}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple[50],
       appBar: AppBar(
-        title: const Text('Block Sites'),
-        backgroundColor: Colors.deepPurple,
+        title: const Text('Block Distracting Sites'),
+        centerTitle: true,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.shield, size: 80, color: Colors.deepPurple),
-              const SizedBox(height: 20),
-              const Text(
-                'Enable Accessibility Service',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+              Icon(
+                isAccessibilityEnabled ? Icons.check_circle : Icons.block,
+                size: 72,
+                color: isAccessibilityEnabled ? Colors.green : Colors.red,
               ),
-              const SizedBox(height: 12),
-              const Text(
-                'To block distracting apps or websites like Instagram, Facebook, and Reddit, please enable Accessibility manually:',
+              const SizedBox(height: 16),
+              Text(
+                isAccessibilityEnabled
+                    ? 'Accessibility Service is ON'
+                    : 'Please enable Accessibility to block sites.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.deepPurple),
-                  borderRadius: BorderRadius.circular(12),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: isAccessibilityEnabled ? Colors.green : Colors.red,
                 ),
-                child: const Text(
-                  'Settings > Accessibility > Block Sites > Enable',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.w600,
-                  ),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: openAccessibilitySettings,
+                icon: const Icon(Icons.settings_accessibility),
+                label: const Text('Open Accessibility Settings'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
               ),
             ],

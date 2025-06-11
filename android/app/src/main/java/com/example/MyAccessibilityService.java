@@ -15,6 +15,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        Log.d("MyAccessibilityService", "Event triggered: " + event.toString());
         if (event == null || getRootInActiveWindow() == null) return;
 
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
